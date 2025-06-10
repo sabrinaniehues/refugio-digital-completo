@@ -1,5 +1,103 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="UTF-8"><title>Perfil</title></head>
-<body><h1>Página de Perfil</h1></body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil - Refúgio Digital</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff0e6;
+      padding: 2rem;
+      color: #333;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+    }
+    .anonimo-toggle {
+      margin-top: 1rem;
+    }
+    .logout {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    button {
+      padding: 0.7rem 1.2rem;
+      background: #e11d48;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Perfil do Usuário</h2>
+    <label for="nome">Nome de Usuário:</label>
+    <input type="text" id="nome" placeholder="Digite seu nome" />
+
+    <div class="anonimo-toggle">
+      <label><input type="checkbox" id="modoAnonimo" /> Usar modo anônimo</label>
+    </div>
+
+    <div class="logout">
+      <button onclick="logout()">Sair</button>
+    </div>
+  </div>
+
+  <script>
+    // Carregar dados salvos
+    const nomeInput = document.getElementById("nome");
+    const modoAnonimo = document.getElementById("modoAnonimo");
+
+    window.onload = function() {
+      const nomeSalvo = localStorage.getItem("nomeUsuario") || "";
+      const anonimo = localStorage.getItem("anonimo") === "true";
+      nomeInput.value = nomeSalvo;
+      modoAnonimo.checked = anonimo;
+
+      if (anonimo) {
+        nomeInput.disabled = true;
+        nomeInput.placeholder = "Usuário Anônimo";
+      }
+    };
+
+    nomeInput.addEventListener("input", function() {
+      localStorage.setItem("nomeUsuario", nomeInput.value);
+    });
+
+    modoAnonimo.addEventListener("change", function() {
+      localStorage.setItem("anonimo", modoAnonimo.checked);
+      nomeInput.disabled = modoAnonimo.checked;
+      nomeInput.placeholder = modoAnonimo.checked ? "Usuário Anônimo" : "Digite seu nome";
+    });
+
+    function logout() {
+      localStorage.removeItem("logado");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
 </html>
