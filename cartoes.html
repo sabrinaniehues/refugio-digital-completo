@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cartões de Enfrentamento</title>
+  <style>
+    body { font-family: Arial; background: #eef5f0; padding: 20px; }
+    input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; }
+    button { padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <h1>💬 Cartões de Enfrentamento</h1>
+  <input type="text" id="frase" placeholder="Frase de enfrentamento" />
+  <input type="datetime-local" id="alarme" />
+  <br/>
+  <button onclick="salvarCartao()">Salvar e Criar Lembrete</button>
+  <div id="historico"></div>
+
+  <script>
+    function salvarCartao() {
+      const frase = document.getElementById('frase').value;
+      const alarme = document.getElementById('alarme').value;
+      const cartoes = JSON.parse(localStorage.getItem('cartoes') || '[]');
+      cartoes.push({ data: new Date().toLocaleString(), frase, alarme });
+      localStorage.setItem('cartoes', JSON.stringify(cartoes));
+      alert("Cartão salvo! Adicione manualmente esse horário na sua agenda Google.");
+    }
+  </script>
+</body>
+</html>

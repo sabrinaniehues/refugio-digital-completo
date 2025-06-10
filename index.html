@@ -3,9 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <title>Refúgio Digital</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Morning_Sunrise_in_the_Mountains_oil_painting.jpg/1200px-Morning_Sunrise_in_the_Mountains_oil_painting.jpg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+    }
+    .motivacional {
+      font-size: 1.2em;
+      margin-top: 20px;
+      font-style: italic;
+    }
+    .btn {
+      display: block;
+      margin: 20px auto;
+      padding: 15px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+    .music-control {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Refúgio Digital</h1>
-  <p>Bem-vindo ao Refúgio Digital!</p>
+  <audio id="bg-music" autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/10/03/audio_3d08e57ba5.mp3?filename=calm-meditation-ambient-117527.mp3" type="audio/mp3">
+  </audio>
+  <button class="music-control btn" onclick="toggleMusic()">🔈 Música</button>
+
+  <h1>Bem-vindo. Aqui você pode apenas estar.</h1>
+
+  <p class="motivacional" id="frase"></p>
+
+  <button class="btn" onclick="location.href='diario.html'">📓 Diário Emocional</button>
+  <button class="btn" onclick="location.href='cartoes.html'">💬 Cartões de Enfrentamento</button>
+  <button class="btn" onclick="location.href='recursos.html'">🔗 Recursos Úteis</button>
+  <button class="btn" onclick="location.href='ajuda.html'">🚨 Ajuda Rápida</button>
+
+  <script>
+    const frases = ["Você tem valor.", "Tudo bem não estar bem.", "Você merece cuidado.", "Respire. Está tudo bem por agora."];
+    document.getElementById('frase').innerText = frases[Math.floor(Math.random() * frases.length)];
+
+    function toggleMusic() {
+      const music = document.getElementById('bg-music');
+      music.muted = !music.muted;
+    }
+  </script>
 </body>
 </html>
