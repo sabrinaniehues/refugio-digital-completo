@@ -98,6 +98,108 @@
   <button onclick="window.location.href='recursos.html'" title="Links úteis de apoio emocional">🧰 Recursos Úteis</button> Recursos Úteis<br><br>
   <button onclick="window.location.href='ajuda.html'" title="Acesso rápido ao CVV e mapa de atendimento">🚨 Ajuda Rápida</button> Ajuda Rápida
 </div>
+<!-- Google API -->
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+  const CLIENT_ID = '781954347330-4l9re3h3p8jj1fm5a735kl9s341gn0qh.apps.googleusercontent.com';
+  const API_KEY = 'AlzaSyAJs-a1RxaIgmJbTXYQ0GJEmrm14ISlivM';
+  const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+  const SCOPES = "https://www.googleapis.com/auth/calendar.events";
 
+  function initClient() {
+    gapi.client.init({
+      apiKey: API_KEY,
+      clientId: CLIENT_ID,
+      discoveryDocs: DISCOVERY_DOCS,
+      scope: SCOPES,
+    }).then(() => {
+      // Após autorização, chamar função para criar evento
+      document.getElementById("criarEvento").onclick = criarEvento;
+    });
+  }
+
+  function handleAuthClick() {
+    gapi.auth2.getAuthInstance().signIn();
+  }
+
+  function criarEvento() {
+    const frase = document.getElementById("frase").value;
+    const inicio = new Date(document.getElementById("dataInicio").value);
+    const fim = new Date(document.getElementById("dataFim").value);
+    const emoji = document.querySelector(".emoji.ativo")?.textContent || "";
+
+    const evento = {
+      summary: frase,
+description: Sentimento: ${emoji},
+      start: { dateTime: inicio.toISOString(), timeZone: 'America/Sao_Paulo' },
+      end: { dateTime: fim.toISOString(), timeZone: 'America/Sao_Paulo' },
+      recurrence: ["RRULE:FREQ=DAILY"], // ou WEEKLY etc.
+    };
+
+    gapi.client.calendar.events.insert({
+      calendarId: "primary",
+      resource: evento,
+    }).then(response => {
+      alert("Lembrete salvo no Google Agenda!");
+    });
+  }
+
+  gapi.load("client:auth2", initClient);
+</script>
 </body>
 </html>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+  const CLIENT_ID = "781954347330-4l9re3h3p8jj1fm5a735kl9s341gn0qh.apps.googleusercontent.com";
+  const API_KEY = "AIzaSyAJs-a1RxaIqmJbTXYQ0GJEmrm14ISiIvM";
+  const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+  const SCOPES = "https://www.googleapis.com/auth/calendar.events";
+
+  function autenticarGoogle(callback) {
+    gapi.load("client:auth2", () => {
+      gapi.client
+        .init({ apiKey: API_KEY, clientId: CLIENT_ID, discoveryDocs: DISCOVERY_DOCS, scope: SCOPES })
+        .then(() => {
+          const isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
+          if (!isSignedIn) {
+            gapi.auth2.getAuthInstance().signIn().then(callback);
+          } else {
+            callback();
+          }
+        });
+    });
+  }
+
+  function adicionarEventoGoogle(titulo, data, hora, repeticao = "DAILY") {
+    const evento = {
+      summary: titulo,
+      start: { dateTime: ${data}T${hora}:00, timeZone: "America/Sao_Paulo" },
+      end: { dateTime: ${data}T${hora}:00, timeZone: "America/Sao_Paulo" },
+      recurrence: [RRULE:FREQ=${repeticao}]
+    };
+    gapi.client.calendar.events.insert({ calendarId: "primary", resource: evento }).then((resp) => {
+      alert("Lembrete salvo no Google Agenda!");
+    });
+ }
+</script>
+const evento = {
+  summary: "Cartão de Enfrentamento",
+  description: "Frase: Você consegue passar por isso!",
+  start: {
+    dateTime: "2025-06-11T09:00:00-03:00",
+    timeZone: "America/Sao_Paulo",
+  },
+  end: {
+    dateTime: "2025-06-11T09:30:00-03:00",
+    timeZone: "America/Sao_Paulo",
+  },
+  recurrence: ["RRULE:FREQ=DAILY;COUNT=5"], // Repetir 5 dias
+};
+<input type="text" id="frase" placeholder="Escreva seu cartão de enfrentamento..." />
+<input type="datetime-local" id="dataInicio" />
+<input type="datetime-local" id="dataFim" />
+<button id="criarEvento">Adicionar no Google Agenda</button>
+addEventToCalendar(evento);
+<button onclick="handleAuthClick()">Conectar com Google</button>
+<button onclick="criarLembrete()">Criar Lembrete</button>

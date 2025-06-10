@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - Refúgio Digital</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -30,101 +30,54 @@
       color: #333;
       text-align: center;
     }
-    .input-group {
-      margin-bottom: 1rem;
-    }
-    .input-group label {
-      display: block;
-      margin-bottom: 0.3rem;
-      color: #555;
-    }
-    .input-group input {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 0.5rem;
-    }
-    .login-btn, .google-btn, .facebook-btn {
-      width: 100%;
-      padding: 0.7rem;
-      margin-top: 0.5rem;
-      border: none;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    .login-btn { background-color: #f59e0b; color: white; }
-    .google-btn { background-color: #db4437; color: white; }
-    .facebook-btn { background-color: #1877f2; color: white; }
     .or {
       text-align: center;
       margin: 1rem 0;
       color: #888;
-    }
-    .extra-btn {
-      margin-top: 1rem;
-      text-align: center;
-    }
-    .extra-btn a {
-      display: inline-block;
-      margin-top: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: #6b7280;
-      color: white;
-      border-radius: 0.5rem;
-      text-decoration: none;
     }
   </style>
 </head>
 <body>
   <div class="login-box">
     <h2>Entrar no Refúgio</h2>
-    <form>
-      <div class="input-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required />
-      </div>
-      <div class="input-group">
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" name="senha" required />
-      </div>
-      <button type="submit" class="login-btn">Entrar</button>
+    <form onsubmit="fakeLogin(event)">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required style="width:100%;padding:8px;margin-bottom:10px;" />
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" name="senha" required style="width:100%;padding:8px;margin-bottom:10px;" />
+      <button type="submit" style="width:100%;padding:10px;background-color:#f59e0b;border:none;color:white;border-radius:5px;">Entrar</button>
     </form>
 
     <div class="or">ou</div>
 
-    <button class="google-btn" onclick="loginGoogle()">
-      <i class="fab fa-google"></i> Entrar com Google
-    </button>
-    <button class="facebook-btn" onclick="loginFacebook()">
-      <i class="fab fa-facebook"></i> Entrar com Facebook
-    </button>
+    <div id="g_id_onload"
+         data-client_id="SEU_CLIENT_ID_AQUI"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
 
-    <div class="extra-btn">
-      <a href="perfil.html">Ir para Perfil</a>
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="pill"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-size="large">
     </div>
   </div>
 
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
-    function loginGoogle() {
-      window.location.href = "https://accounts.google.com/o/oauth2/auth?client_id=SEU_CLIENT_ID&redirect_uri=https://ref-gio-digital.vercel.app&response_type=token&scope=email%20profile";
-    }
-
-    function loginFacebook() {
-      alert("Login com Facebook em breve.");
-    }
-
-    document.querySelector("form").addEventListener("submit", function(e) {
+    function fakeLogin(e) {
       e.preventDefault();
       localStorage.setItem("logado", "sim");
       window.location.href = "index.html";
-    });
+    }
 
-    if (!localStorage.getItem("logado")) {
-      if (!window.location.href.includes("login.html")) {
-        window.location.href = "login.html";
-      }
+    function handleCredentialResponse(response) {
+      console.log("ID Token: ", response.credential);
+      localStorage.setItem("logado", "sim");
+      window.location.href = "index.html";
     }
   </script>
 </body>
