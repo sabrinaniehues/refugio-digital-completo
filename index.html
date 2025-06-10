@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -34,30 +35,91 @@
       top: 15px;
       right: 20px;
     }
+    textarea, select {
+      width: 80%;
+      margin: 10px auto;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .emoji {
+      font-size: 24px;
+      cursor: pointer;
+      padding: 5px;
+    }
+    .emoji.selected {
+      background-color: rgba(255,255,255,0.2);
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
   <audio id="bg-music" autoplay loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/10/03/audio_3d08e57ba5.mp3?filename=calm-meditation-ambient-117527.mp3" type="audio/mp3">
   </audio>
-  <button class="music-control btn" onclick="toggleMusic()">🔈 Música</button>
+  <button class="music-control btn" onclick="toggleMusic()" id="musicBtn">🔈 Música</button>
 
   <h1>Bem-vindo. Aqui você pode apenas estar.</h1>
-
   <p class="motivacional" id="frase"></p>
 
+  <h3>➕ Criar novo Cartão de Enfrentamento</h3>
+  <textarea id="novoCartao" placeholder="Escreva uma frase curta de enfrentamento..."></textarea>
+  <div id="emojis">
+    <span class="emoji" onclick="selecionarEmoji(this)">🙂</span>
+    <span class="emoji" onclick="selecionarEmoji(this)">😐</span>
+    <span class="emoji" onclick="selecionarEmoji(this)">😔</span>
+    <span class="emoji" onclick="selecionarEmoji(this)">😢</span>
+    <span class="emoji" onclick="selecionarEmoji(this)">😡</span>
+  </div>
+  <button class="btn" onclick="salvarCartao()">Salvar Cartão e Adicionar ao Google Agenda</button>
+
+  <h3>🧭 Navegação</h3>
   <button class="btn" onclick="location.href='diario.html'">📓 Diário Emocional</button>
-  <button class="btn" onclick="location.href='cartoes.html'">💬 Cartões de Enfrentamento</button>
+  <button class="btn" onclick="location.href='cartoes.html'">📂 Ver Cartões</button>
   <button class="btn" onclick="location.href='recursos.html'">🔗 Recursos Úteis</button>
   <button class="btn" onclick="location.href='ajuda.html'">🚨 Ajuda Rápida</button>
+  <button class="btn" onclick="location.href='login.html'">🔐 Login</button>
 
   <script>
-    const frases = ["Você tem valor.", "Tudo bem não estar bem.", "Você merece cuidado.", "Respire. Está tudo bem por agora."];
+    const frases = [
+      "Você tem valor.",
+      "Tudo bem não estar bem.",
+      "Você merece cuidado.",
+      "Respire. Está tudo bem por agora."
+    ];
     document.getElementById('frase').innerText = frases[Math.floor(Math.random() * frases.length)];
 
     function toggleMusic() {
       const music = document.getElementById('bg-music');
+      const btn = document.getElementById('musicBtn');
       music.muted = !music.muted;
+      btn.innerText = music.muted ? '🔇 Música' : '🔈 Música';
+    }
+
+    let emojiSelecionado = "";
+
+    function selecionarEmoji(el) {
+      document.querySelectorAll(".emoji").forEach(e => e.classList.remove("selected"));
+      el.classList.add("selected");
+      emojiSelecionado = el.textContent;
+    }
+
+    function salvarCartao() {
+      const frase = document.getElementById("novoCartao").value;
+      if (!frase) {
+        alert("Escreva uma frase para o cartão.");
+        return;
+      }
+      const cartoes = JSON.parse(localStorage.getItem("cartoes") || "[]");
+      cartoes.push({
+        data: new Date().toLocaleString(),
+        frase,
+        emoji: emojiSelecionado
+      });
+      localStorage.setItem("cartoes", JSON.stringify(cartoes));
+      alert("Cartão salvo! Você pode agora adicioná-lo manualmente à sua agenda do Google.");
+      window.open("https://calendar.google.com/calendar/r/eventedit", "_blank");
+      document.getElementById("novoCartao").value = "";
+      document.querySelectorAll(".emoji").forEach(e => e.classList.remove("selected"));
     }
   </script>
 </body>
