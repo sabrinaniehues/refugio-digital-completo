@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Refúgio Digital</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff5f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-box {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      max-width: 350px;
+      width: 100%;
+    }
+    .login-box h2 {
+      margin-bottom: 1rem;
+      color: #333;
+      text-align: center;
+    }
+    .input-group {
+      margin-bottom: 1rem;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #555;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+    }
+    .login-btn, .google-btn, .facebook-btn {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .login-btn { background-color: #f59e0b; color: white; }
+    .google-btn { background-color: #db4437; color: white; }
+    .facebook-btn { background-color: #1877f2; color: white; }
+    .or {
+      text-align: center;
+      margin: 1rem 0;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Entrar no Refúgio</h2>
+    <form>
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      <div class="input-group">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" required />
+      </div>
+      <button type="submit" class="login-btn">Entrar</button>
+    </form>
+
+    <div class="or">ou</div>
+
+    <button class="google-btn" onclick="loginGoogle()">
+      <i class="fab fa-google"></i> Entrar com Google
+    </button>
+    <button class="facebook-btn" onclick="loginFacebook()">
+      <i class="fab fa-facebook"></i> Entrar com Facebook
+    </button>
+  </div>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    function loginGoogle() {
+      window.location.href = "https://accounts.google.com/o/oauth2/auth?client_id=SEU_CLIENT_ID&redirect_uri=https://ref-gio-digital.vercel.app&response_type=token&scope=email%20profile";
+    }
+
+    function loginFacebook() {
+      alert("Login com Facebook em breve.");
+    }
+
+    document.querySelector("form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      // Login padrão fake
+      localStorage.setItem("logado", "sim");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
