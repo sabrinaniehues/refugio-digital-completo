@@ -1,205 +1,70 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Refúgio Digital</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background-image: url('fundo-montanha.jpg');
-      background-size: cover;
-      background-position: center;
-      color: #333;
-      text-align: center;
+      background: #fffaf4;
       padding: 20px;
     }
-    .container {
-      background-color: rgba(255, 255, 255, 0.85);
-      border-radius: 12px;
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-    }
-    .title {
-      font-size: 1.5em;
-      margin-bottom: 10px;
-    }
-    .motivacional {
-      font-style: italic;
-      margin: 10px 0;
-    }
-    .emoji-bar span {
-      font-size: 1.5em;
-      margin: 5px;
-      cursor: pointer;
-    }
-    input, button {
-      margin-top: 10px;
-      padding: 10px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .label {
-      text-align: left;
-      font-weight: bold;
-      margin-top: 15px;
-    }
-    audio {
+    button {
       display: block;
-      margin: 10px auto;
-    }
-    @media (max-width: 600px) {
-      .container {
-        width: 90%;
-      }
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="title">Bem-vindo. Aqui você pode apenas estar.</div>
-    <audio id="audioPlayer" controls autoplay loop>
-      <source src="musica.mp3" type="audio/mpeg">
-      Seu navegador não suporta áudio HTML.
-    </audio>
-    <div class="motivacional" id="fraseMotivacional">"Você tem valor."</div>
+  <button onclick="location.href='diario.html'">📖 Diário Emocional</button>
+  <button onclick="location.href='recursos.html'">🧰 Recursos Úteis</button>
+  <button onclick="location.href='ajuda.html'">🚨 Ajuda Rápida</button>
 
-    <div class="label">Novo Cartão de Enfrentamento:</div>
-    <input type="text" placeholder="Escreva uma frase curta de enfrentamento..." id="cartaoInput">
-    
-    <div class="label">Como você está se sentindo?</div>
-    <div class="emoji-bar">
-      <span title="Feliz">😊</span><span title="Tranquilo">🙂</span><span title="Confuso">😕</span>
-      <span title="Triste">😢</span><span title="Irritado">😠</span>
-    </div>
-
-    <button onclick="salvarCartao()">Salvar Cartão</button>
-    <button onclick="verHistorico()">Ver Histórico</button>
-    <button onclick="definirLembrete()">Adicionar Lembrete</button>
-  </div>
+  <h3>Cartão de Enfrentamento</h3>
+  <textarea id="frase" placeholder="Escreva seu cartão de enfrentamento..." rows="2" cols="40"></textarea><br>
+  <select id="repetir">
+    <option value="DAILY">Diariamente</option>
+    <option value="WEEKLY">Semanalmente</option>
+  </select>
+  <input type="datetime-local" id="dataHora">
+  <button onclick="addEventToCalendar()">Adicionar no Google Agenda</button>
+  <button onclick="login()">Conectar com Google</button>
 
   <script>
-    function salvarCartao() {
-      alert("Cartão salvo (simulado).");
+    let gapiLoaded = false;
+    function login() {
+      alert("Login simulado com Google.");
     }
-    function verHistorico() {
-      alert("Abrindo histórico (simulado).");
-    }
-    function definirLembrete() {
-      alert("Lembrete será criado e vinculado ao Google Agenda (simulado).");
+
+    function addEventToCalendar() {
+      const frase = document.getElementById("frase").value;
+      const repetir = document.getElementById("repetir").value;
+      const dataHora = new Date(document.getElementById("dataHora").value);
+      if (!frase || !dataHora) {
+        alert("Preencha todos os campos!");
+        return;
+      }
+
+      const evento = {
+        summary: "Cartão de Enfrentamento",
+        description: "Frase: " + frase,
+        start: {
+          dateTime: dataHora.toISOString(),
+          timeZone: "America/Sao_Paulo",
+        },
+        end: {
+          dateTime: new Date(dataHora.getTime() + 30 * 60000).toISOString(),
+          timeZone: "America/Sao_Paulo",
+        },
+        recurrence: ["RRULE:FREQ=" + repetir + ";COUNT=5"]
+      };
+
+      console.log("Evento pronto para envio:", evento);
+      alert("Evento pronto para sincronizar com a Google Agenda.");
     }
   </script>
-
-<div class="extra-buttons" style="margin-top: 20px;">
-  <button onclick="window.location.href='diario.html'" title="Registrar sentimentos e emoções">📖 Diário Emocional</button> Diário Emocional<br><br>
-  <button onclick="window.location.href='recursos.html'" title="Links úteis de apoio emocional">🧰 Recursos Úteis</button> Recursos Úteis<br><br>
-  <button onclick="window.location.href='ajuda.html'" title="Acesso rápido ao CVV e mapa de atendimento">🚨 Ajuda Rápida</button> Ajuda Rápida
-</div>
-<!-- Google API -->
-<script src="https://apis.google.com/js/api.js"></script>
-<script>
-  const CLIENT_ID = '781954347330-4l9re3h3p8jj1fm5a735kl9s341gn0qh.apps.googleusercontent.com';
-  const API_KEY = 'AlzaSyAJs-a1RxaIgmJbTXYQ0GJEmrm14ISlivM';
-  const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-  const SCOPES = "https://www.googleapis.com/auth/calendar.events";
-
-  function initClient() {
-    gapi.client.init({
-      apiKey: API_KEY,
-      clientId: CLIENT_ID,
-      discoveryDocs: DISCOVERY_DOCS,
-      scope: SCOPES,
-    }).then(() => {
-      // Após autorização, chamar função para criar evento
-      document.getElementById("criarEvento").onclick = criarEvento;
-    });
-  }
-
-  function handleAuthClick() {
-    gapi.auth2.getAuthInstance().signIn();
-  }
-
-  function criarEvento() {
-    const frase = document.getElementById("frase").value;
-    const inicio = new Date(document.getElementById("dataInicio").value);
-    const fim = new Date(document.getElementById("dataFim").value);
-    const emoji = document.querySelector(".emoji.ativo")?.textContent || "";
-
-    const evento = {
-      summary: frase,
-description: Sentimento: ${emoji},
-      start: { dateTime: inicio.toISOString(), timeZone: 'America/Sao_Paulo' },
-      end: { dateTime: fim.toISOString(), timeZone: 'America/Sao_Paulo' },
-      recurrence: ["RRULE:FREQ=DAILY"], // ou WEEKLY etc.
-    };
-
-    gapi.client.calendar.events.insert({
-      calendarId: "primary",
-      resource: evento,
-    }).then(response => {
-      alert("Lembrete salvo no Google Agenda!");
-    });
-  }
-
-  gapi.load("client:auth2", initClient);
-</script>
 </body>
 </html>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://apis.google.com/js/api.js"></script>
-<script>
-  const CLIENT_ID = "781954347330-4l9re3h3p8jj1fm5a735kl9s341gn0qh.apps.googleusercontent.com";
-  const API_KEY = "AIzaSyAJs-a1RxaIqmJbTXYQ0GJEmrm14ISiIvM";
-  const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-  const SCOPES = "https://www.googleapis.com/auth/calendar.events";
-
-  function autenticarGoogle(callback) {
-    gapi.load("client:auth2", () => {
-      gapi.client
-        .init({ apiKey: API_KEY, clientId: CLIENT_ID, discoveryDocs: DISCOVERY_DOCS, scope: SCOPES })
-        .then(() => {
-          const isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
-          if (!isSignedIn) {
-            gapi.auth2.getAuthInstance().signIn().then(callback);
-          } else {
-            callback();
-          }
-        });
-    });
-  }
-
-  function adicionarEventoGoogle(titulo, data, hora, repeticao = "DAILY") {
-    const evento = {
-      summary: titulo,
-      start: { dateTime: ${data}T${hora}:00, timeZone: "America/Sao_Paulo" },
-      end: { dateTime: ${data}T${hora}:00, timeZone: "America/Sao_Paulo" },
-      recurrence: [RRULE:FREQ=${repeticao}]
-    };
-    gapi.client.calendar.events.insert({ calendarId: "primary", resource: evento }).then((resp) => {
-      alert("Lembrete salvo no Google Agenda!");
-    });
- }
-</script>
-const evento = {
-  summary: "Cartão de Enfrentamento",
-  description: "Frase: Você consegue passar por isso!",
-  start: {
-    dateTime: "2025-06-11T09:00:00-03:00",
-    timeZone: "America/Sao_Paulo",
-  },
-  end: {
-    dateTime: "2025-06-11T09:30:00-03:00",
-    timeZone: "America/Sao_Paulo",
-  },
-  recurrence: ["RRULE:FREQ=DAILY;COUNT=5"], // Repetir 5 dias
-};
-<input type="text" id="frase" placeholder="Escreva seu cartão de enfrentamento..." />
-<input type="datetime-local" id="dataInicio" />
-<input type="datetime-local" id="dataFim" />
-<button id="criarEvento">Adicionar no Google Agenda</button>
-addEventToCalendar(evento);
-<button onclick="handleAuthClick()">Conectar com Google</button>
-<button onclick="criarLembrete()">Criar Lembrete</button>
