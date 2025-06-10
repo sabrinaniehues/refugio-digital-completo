@@ -2,124 +2,94 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Refúgio Digital</title>
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Morning_Sunrise_in_the_Mountains_oil_painting.jpg/1200px-Morning_Sunrise_in_the_Mountains_oil_painting.jpg');
+      background-image: url('fundo-montanha.jpg');
       background-size: cover;
       background-position: center;
-      color: #fff;
+      color: #333;
       text-align: center;
-      padding: 50px;
+      padding: 20px;
+    }
+    .container {
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+    .title {
+      font-size: 1.5em;
+      margin-bottom: 10px;
     }
     .motivacional {
-      font-size: 1.2em;
-      margin-top: 20px;
       font-style: italic;
+      margin: 10px 0;
     }
-    .btn {
-      display: block;
-      margin: 20px auto;
-      padding: 15px 25px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
+    .emoji-bar span {
+      font-size: 1.5em;
+      margin: 5px;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
     }
-    .music-control {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-    }
-    textarea, select {
-      width: 80%;
-      margin: 10px auto;
+    input, button {
+      margin-top: 10px;
       padding: 10px;
-      border-radius: 5px;
+      width: 100%;
+      box-sizing: border-box;
     }
-    .emoji {
-      font-size: 24px;
-      cursor: pointer;
-      padding: 5px;
+    .label {
+      text-align: left;
+      font-weight: bold;
+      margin-top: 15px;
     }
-    .emoji.selected {
-      background-color: rgba(255,255,255,0.2);
-      border-radius: 5px;
+    audio {
+      display: block;
+      margin: 10px auto;
+    }
+    @media (max-width: 600px) {
+      .container {
+        width: 90%;
+      }
     }
   </style>
 </head>
 <body>
-  <audio id="bg-music" autoplay loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/10/03/audio_3d08e57ba5.mp3?filename=calm-meditation-ambient-117527.mp3" type="audio/mp3">
-  </audio>
-  <button class="music-control btn" onclick="toggleMusic()" id="musicBtn">🔈 Música</button>
+  <div class="container">
+    <div class="title">Bem-vindo. Aqui você pode apenas estar.</div>
+    <audio id="audioPlayer" controls autoplay loop>
+      <source src="musica.mp3" type="audio/mpeg">
+      Seu navegador não suporta áudio HTML.
+    </audio>
+    <div class="motivacional" id="fraseMotivacional">"Você tem valor."</div>
 
-  <h1>Bem-vindo. Aqui você pode apenas estar.</h1>
-  <p class="motivacional" id="frase"></p>
+    <div class="label">Novo Cartão de Enfrentamento:</div>
+    <input type="text" placeholder="Escreva uma frase curta de enfrentamento..." id="cartaoInput">
+    
+    <div class="label">Como você está se sentindo?</div>
+    <div class="emoji-bar">
+      <span title="Feliz">😊</span><span title="Tranquilo">🙂</span><span title="Confuso">😕</span>
+      <span title="Triste">😢</span><span title="Irritado">😠</span>
+    </div>
 
-  <h3>➕ Criar novo Cartão de Enfrentamento</h3>
-  <textarea id="novoCartao" placeholder="Escreva uma frase curta de enfrentamento..."></textarea>
-  <div id="emojis">
-    <span class="emoji" onclick="selecionarEmoji(this)">🙂</span>
-    <span class="emoji" onclick="selecionarEmoji(this)">😐</span>
-    <span class="emoji" onclick="selecionarEmoji(this)">😔</span>
-    <span class="emoji" onclick="selecionarEmoji(this)">😢</span>
-    <span class="emoji" onclick="selecionarEmoji(this)">😡</span>
+    <button onclick="salvarCartao()">Salvar Cartão</button>
+    <button onclick="verHistorico()">Ver Histórico</button>
+    <button onclick="definirLembrete()">Adicionar Lembrete</button>
   </div>
-  <button class="btn" onclick="salvarCartao()">Salvar Cartão e Adicionar ao Google Agenda</button>
-
-  <h3>🧭 Navegação</h3>
-  <button class="btn" onclick="location.href='diario.html'">📓 Diário Emocional</button>
-  <button class="btn" onclick="location.href='cartoes.html'">📂 Ver Cartões</button>
-  <button class="btn" onclick="location.href='recursos.html'">🔗 Recursos Úteis</button>
-  <button class="btn" onclick="location.href='ajuda.html'">🚨 Ajuda Rápida</button>
-  <button class="btn" onclick="location.href='login.html'">🔐 Login</button>
 
   <script>
-    const frases = [
-      "Você tem valor.",
-      "Tudo bem não estar bem.",
-      "Você merece cuidado.",
-      "Respire. Está tudo bem por agora."
-    ];
-    document.getElementById('frase').innerText = frases[Math.floor(Math.random() * frases.length)];
-
-    function toggleMusic() {
-      const music = document.getElementById('bg-music');
-      const btn = document.getElementById('musicBtn');
-      music.muted = !music.muted;
-      btn.innerText = music.muted ? '🔇 Música' : '🔈 Música';
-    }
-
-    let emojiSelecionado = "";
-
-    function selecionarEmoji(el) {
-      document.querySelectorAll(".emoji").forEach(e => e.classList.remove("selected"));
-      el.classList.add("selected");
-      emojiSelecionado = el.textContent;
-    }
-
     function salvarCartao() {
-      const frase = document.getElementById("novoCartao").value;
-      if (!frase) {
-        alert("Escreva uma frase para o cartão.");
-        return;
-      }
-      const cartoes = JSON.parse(localStorage.getItem("cartoes") || "[]");
-      cartoes.push({
-        data: new Date().toLocaleString(),
-        frase,
-        emoji: emojiSelecionado
-      });
-      localStorage.setItem("cartoes", JSON.stringify(cartoes));
-      alert("Cartão salvo! Você pode agora adicioná-lo manualmente à sua agenda do Google.");
-      window.open("https://calendar.google.com/calendar/r/eventedit", "_blank");
-      document.getElementById("novoCartao").value = "";
-      document.querySelectorAll(".emoji").forEach(e => e.classList.remove("selected"));
+      alert("Cartão salvo (simulado).");
+    }
+    function verHistorico() {
+      alert("Abrindo histórico (simulado).");
+    }
+    function definirLembrete() {
+      alert("Lembrete será criado e vinculado ao Google Agenda (simulado).");
     }
   </script>
 </body>
